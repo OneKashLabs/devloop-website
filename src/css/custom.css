@@ -191,7 +191,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; }
 .dl-back marker path { fill: var(--dl-accent); stroke: none; }
 .dl-back span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 0 0.6rem; background: var(--dl-slate); color: var(--dl-accent); font-size: 0.88rem; white-space: nowrap; }
 
-/* Prompting as you go against devloop, one row per problem. */
+/* Ad-hoc prompting against devloop, one row per problem. */
 .dl-compare { display: table; width: 100%; border-collapse: collapse; margin: 0; }
 .dl-compare tr, .dl-compare tr:nth-child(2n) { background: transparent; border: 0; }
 .dl-compare th, .dl-compare td { border: 0; border-top: 1px solid var(--dl-line); padding: 1rem 1.5rem 1rem 0; text-align: left; vertical-align: top; background: transparent; }
@@ -238,7 +238,7 @@ a:focus-visible, button:focus-visible, .navbar__link:focus-visible, .footer__lin
   .dl-compare tr { display: block; padding: 0.9rem 0; border-top: 1px solid var(--dl-line); }
   .dl-compare th, .dl-compare td { display: block; width: auto; border: 0; padding: 0.15rem 0; }
   .dl-compare tbody th { width: auto; }
-  .dl-compare td:nth-child(2)::before { content: 'Prompting as you go: '; font-weight: 600; color: var(--dl-ink); }
+  .dl-compare td:nth-child(2)::before { content: 'Ad-hoc prompting: '; font-weight: 600; color: var(--dl-ink); }
   .dl-compare td:nth-child(3)::before { content: 'With devloop: '; font-weight: 600; }
 }
 @media (max-width: 600px) {

@@ -188,13 +188,13 @@ function Why(): ReactNode {
     <section className="dl-section dl-section--mist">
       <div className="container">
         <Heading as="h2" className="dl-heading">
-          Compared with prompting as you go
+          Ad-hoc prompting vs devloop
         </Heading>
         <table className="dl-compare">
           <thead>
             <tr>
               <th scope="col" />
-              <th scope="col">Prompting as you go</th>
+              <th scope="col">Ad-hoc prompting</th>
               <th scope="col">With devloop</th>
             </tr>
           </thead>
