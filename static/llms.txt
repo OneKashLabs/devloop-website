@@ -1,0 +1,46 @@
+# devloop
+
+> A test-driven development loop for Claude Code and Codex: specify, plan, implement, with independent review agents that check the plan before coding and the diff before commit. The plan and code reviews run in a context that did not write the plan or the code. Free and open source under Apache-2.0. Made by OneKash Labs (https://onekash.org).
+
+devloop ships as markdown skills and agents plus a bash validator: no runtime and no service of its own. It runs inside the coding agent you use and reads per-project context from a `.devloop/` folder (`config.md` for engineering, `domain.md` for domain knowledge).
+
+## The loop
+
+- /spec: clarify what to build (user stories, acceptance criteria, edge cases), or check an existing design doc. Gate: a spec validation checklist.
+- /plan: decide how to build it. Chunks, dependencies and a JSON tracker that survives context resets. A bug fix starts with a proof: a failing test or a probe. Gate: the review-plan agent, before any code is written.
+- /implement: build each chunk test-first against the plan. Gate: the review-impl agent, read-only, with conformance, correctness and cleanup lenses.
+- Checkpoints: the loop stops for you twice, after the plan review (approve the reviewed plan and every decision it made) and after the code review (approve the findings and fixes, then finish steps run).
+- Review rounds: each gate reviews, fixes and re-reviews unattended, up to 3 rounds by default.
+- Fast lane: a small fix (one production file plus its tests, no new behavior beyond the fix) skips the tracker: the failing test, the fix, then the code review.
+- Convergence: if a code-review finding shows the plan itself was wrong, /implement appends corrective chunks, re-runs the plan review in-session and builds them, without asking by default. A finding that the spec was wrong always comes to you.
+
+## The review layer
+
+- review-impl is the code reviewer, read-only, with three lenses. Conformance: the change does what the plan says; each acceptance criterion is confirmed (a quoted test asserts it), plausible (code implements it, no test asserts it) or refuted.
+- Correctness: five angles (line-by-line diff scan, removed-behavior auditor, cross-file caller and callee tracer, language-pitfall specialist, wrapper and proxy correctness). Every candidate is listed, then a verify pass keeps CONFIRMED and PLAUSIBLE findings and a sweep looks for gaps.
+- Cleanup: five angles (reuse, simplification, efficiency, altitude, maintainability: stale docs, hard-coded environment values, dependency and versioning rules, error messages).
+- Conventions, in every lens: the project's own rules (CLAUDE.md or AGENTS.md, and .devloop/config.md), flagged only where a rule can be quoted.
+- Each report ends with one JSON list of findings. Each finding says whether the change introduced it or it was pre-existing; a pre-existing bug is reported and doesn't fail the gate on its own.
+- A small diff (one production file plus its tests) gets one review-impl with lenses: all; a larger one gets one agent per lens in parallel. It can review any diff with no tracker.
+
+## Install
+
+- Claude Code: `/plugin marketplace add OneKashLabs/devloop` then `/plugin install devloop@onekashlabs`
+- Codex: `codex plugin marketplace add OneKashLabs/devloop` then `codex plugin add devloop@onekashlabs`
+- Other Agent Plugins clients: the repo root carries a plugin.json in the Agent Plugins 1.0.0 format.
+
+## Links
+
+- Website: https://devloop.onekash.org
+- Source: https://github.com/OneKashLabs/devloop
+- Stack examples: https://github.com/OneKashLabs/devloop/tree/main/examples
+- Changelog: https://github.com/OneKashLabs/devloop/blob/main/CHANGELOG.md
+- License: Apache-2.0
+
+## Other OneKash Labs projects
+
+- [KashCal](https://kashcal.onekash.org): all your calendars in one private Android app.
+- [KashPass](https://kashpass.onekash.org): your KeePass vault on Android, with no internet permission.
+- [KashCake](https://kashcake.onekash.org): birthday and anniversary reminders from your contacts on Android.
+- [iCloud Calendar MCP](https://mcp.onekash.org): connect AI to your iCloud Calendar.
+- [OneKash Labs](https://onekash.org): the lab behind these projects.

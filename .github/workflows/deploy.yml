@@ -1,0 +1,60 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      # Tells search engines that use IndexNow (Bing and others) which pages exist, right after each
+      # deploy, so changes are picked up in hours. The key is public: its file sits at the site root.
+      - name: Notify IndexNow
+        continue-on-error: true
+        env:
+          HOST: devloop.onekash.org
+          INDEXNOW_KEY: a0a7b8278e1f9f92e066106be6e774ec
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          host, key = os.environ['HOST'], os.environ['INDEXNOW_KEY']
+          sitemap = urllib.request.urlopen(f'https://{host}/sitemap.xml').read().decode()
+          urls = re.findall(r'<loc>([^<]+)</loc>', sitemap)
+          body = json.dumps({'host': host, 'key': key, 'keyLocation': f'https://{host}/{key}.txt', 'urlList': urls}).encode()
+          request = urllib.request.Request('https://api.indexnow.org/indexnow', data=body, headers={'Content-Type': 'application/json; charset=utf-8'})
+          print(urllib.request.urlopen(request).status, len(urls), 'URLs')
+          PY

@@ -1,0 +1,232 @@
+/* Fonts are served from the site itself, so a visit makes no request to a third party. */
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
+@import '@fontsource-variable/figtree';
+
+/* devloop site theme, laid out like the other OneKash Labs sites. The colours come from the
+   logo: its ink for the hero, its violet as the single accent. */
+:root {
+  --ifm-color-primary: #4f46e5;
+  --ifm-color-primary-dark: #3f35e1;
+  --ifm-color-primary-darker: #372dd9;
+  --ifm-color-primary-darkest: #2d24b4;
+  --ifm-color-primary-light: #635be8;
+  --ifm-color-primary-lighter: #6d66ea;
+  --ifm-color-primary-lightest: #8c86ee;
+
+  --dl-slate: #0d1124;
+  --dl-accent: #8f8cff;
+  --dl-accent-hover: #a7a5ff;
+  --dl-on-accent: #0a0e1c;
+  --dl-mist: #f1f2fa;
+  --dl-paper: #fbfbfe;
+  --dl-ink: #12172a;
+  --dl-soft: #4d546f;
+  --dl-line: rgba(18, 23, 42, 0.1);
+
+  --ifm-background-color: var(--dl-paper);
+  --ifm-background-surface-color: #ffffff;
+  --ifm-font-color-base: var(--dl-ink);
+  --ifm-font-family-base: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Bricolage Grotesque Variable', 'Figtree Variable', system-ui, sans-serif;
+  --ifm-font-family-monospace: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ifm-heading-font-weight: 700;
+  --ifm-navbar-background-color: rgba(251, 251, 254, 0.85);
+  --ifm-navbar-shadow: inset 0 -1px 0 var(--dl-line);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #a7a5ff;
+  --ifm-color-primary-dark: #8f8cff;
+  --ifm-color-primary-darker: #837fff;
+  --ifm-color-primary-darkest: #6b66ff;
+  --ifm-color-primary-light: #bab8ff;
+  --ifm-color-primary-lighter: #c4c3ff;
+  --ifm-color-primary-lightest: #dddcff;
+
+  --dl-mist: #121833;
+  --dl-paper: #0a0e1c;
+  --dl-ink: #eceefa;
+  --dl-soft: #b1b5cc;
+  --dl-line: rgba(255, 255, 255, 0.1);
+
+  --ifm-background-surface-color: #121833;
+  --ifm-navbar-background-color: rgba(10, 14, 28, 0.85);
+}
+
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; }
+
+/* The blur would clip the mobile sidebar to the bar's height, so it is desktop only. */
+@media (min-width: 997px) {
+  .navbar { backdrop-filter: saturate(160%) blur(12px); }
+}
+.navbar__title { font-family: var(--ifm-heading-font-family); font-weight: 700; letter-spacing: -0.01em; font-size: 1.2rem; }
+
+/* Sections */
+.dl-section { padding: 5rem 0; }
+.dl-section + .dl-section { border-top: 1px solid var(--dl-line); }
+.dl-section--mist { background: var(--dl-mist); }
+.dl-heading { font-size: clamp(1.9rem, 4vw, 2.6rem); max-width: 42rem; margin: 0 0 2.25rem; scroll-margin-top: 5rem; }
+.dl-lead { font-size: 1.15rem; color: var(--dl-soft); max-width: 42rem; margin: -1rem 0 1.5rem; }
+.dl-more { margin: 1.5rem 0 0; color: var(--dl-soft); }
+.dl-small { margin: -0.5rem 0 1rem; font-size: 0.92rem; color: var(--dl-soft); }
+
+/* Hero: the logo's ink, like a terminal. */
+.dl-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--dl-slate);
+  color: #e7e9f6;
+  padding: clamp(4rem, 9vw, 6.5rem) 0 clamp(4rem, 8vw, 5.5rem);
+}
+/* A ghosted grid behind the hero. */
+.dl-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 75% at 75% 40%, #000 25%, transparent 78%);
+  pointer-events: none;
+}
+.dl-hero__inner { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: 3rem; align-items: center; }
+.dl-hero__title { font-size: clamp(2.4rem, 4.2vw, 3.5rem); line-height: 0.98; margin: 0 0 1.25rem; color: #f6f7fd; text-wrap: balance; }
+.dl-hero__lead { font-size: 1.2rem; line-height: 1.55; color: rgba(231, 233, 246, 0.85); max-width: 31rem; margin: 0 0 2rem; }
+.dl-hero__cta { display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: center; }
+.dl-hero__note { margin: 1.5rem 0 0; font-size: 0.95rem; color: rgba(231, 233, 246, 0.75); }
+
+.dl-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.4rem; border-radius: 999px;
+  font-weight: 700; font-size: 1.02rem; line-height: 1.2;
+  transition: transform 0.12s ease, background-color 0.12s ease;
+}
+.dl-btn:hover { text-decoration: none; transform: translateY(-1px); }
+.dl-btn--accent { background: var(--dl-accent); color: var(--dl-on-accent); }
+.dl-btn--accent:hover { color: var(--dl-on-accent); background: var(--dl-accent-hover); }
+.dl-btn--line { border: 1.5px solid rgba(255, 255, 255, 0.4); color: #f6f7fd; }
+.dl-btn--line:hover { color: #f6f7fd; border-color: #f6f7fd; }
+
+/* Kash stands behind the terminal, face above its top edge, paws on the frame. */
+.dl-hero__art { position: relative; padding-top: 92px; min-width: 0; }
+.dl-hero__kash { position: absolute; z-index: 0; top: 0; right: 36px; width: 156px; height: auto; pointer-events: none; }
+.dl-hero__paws { position: absolute; z-index: 2; top: 76px; right: 46px; width: 136px; height: auto; pointer-events: none; }
+
+/* The install commands, in a terminal window. */
+.dl-hero__term { position: relative; z-index: 1; border-radius: 16px; background: #070a16; border: 1px solid #2c3360; padding: 0.9rem 1rem 1rem; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.6); min-width: 0; }
+.dl-term__bar { display: flex; gap: 6px; margin: 0 0 0.8rem 0.2rem; }
+.dl-term__bar i { width: 11px; height: 11px; border-radius: 50%; background: #2c3360; }
+/* The commands sit in the window itself, as in a real terminal. */
+.dl-hero__term .theme-code-block { margin: 0; box-shadow: none; --prism-background-color: transparent !important; }
+.dl-hero__term .theme-code-block pre { background: transparent !important; padding-left: 0.4rem; }
+/* A prompt drawn by CSS, so the copy button copies only the command. */
+.dl-hero__term pre .token-line::before { content: '> '; color: var(--dl-accent); }
+.dl-term__or { margin: 0.4rem 0 0; text-align: center; font-size: 0.85rem; color: rgba(231, 233, 246, 0.7); }
+
+/* In dark mode the page shares the hero's family, so a hairline marks where the hero ends. */
+[data-theme='dark'] .dl-hero { border-bottom: 1px solid var(--dl-line); }
+
+/* Statement under the hero */
+.dl-statement { padding: 2.75rem 0; border-bottom: 1px solid var(--dl-line); }
+.dl-statement h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); margin: 0 0 0.5rem; }
+.dl-statement p { font-size: 1.12rem; color: var(--dl-soft); margin: 0 0 0.5rem; max-width: 44rem; }
+.dl-statement a { font-weight: 600; }
+
+/* Two-column lists, each item under a hairline. */
+.dl-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; }
+.dl-tile { padding: 1.1rem 0 1.2rem; border-top: 1px solid var(--dl-line); }
+.dl-tile h3 { font-size: 1.2rem; margin: 0 0 0.3rem; }
+.dl-tile p { margin: 0; color: var(--dl-soft); }
+
+/* Numbered steps: the loop and the install */
+.dl-steps { counter-reset: step; list-style: none; padding: 0; margin: 0; max-width: 48rem; }
+.dl-steps > li { counter-increment: step; position: relative; padding: 0 0 2rem 3.4rem; }
+.dl-steps > li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: -0.1rem;
+  width: 2.3rem; height: 2.3rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--dl-slate); color: var(--dl-accent); font-weight: 700;
+}
+[data-theme='dark'] .dl-steps > li::before { background: var(--dl-accent); color: var(--dl-on-accent); }
+.dl-steps h3 { font-size: 1.2rem; margin: 0 0 0.3rem; }
+.dl-steps p { margin: 0 0 1rem; }
+.dl-steps .tabs-container { margin-bottom: 1rem; }
+
+/* Check lists */
+.dl-checks { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 2.5rem; max-width: 52rem; }
+.dl-checks li { position: relative; padding-left: 1.8rem; }
+.dl-checks li::before { content: '✓'; position: absolute; left: 0; font-weight: 700; color: var(--ifm-color-primary); }
+
+/* Footer: one centred row of links, as on the other app sites. */
+.footer {
+  --ifm-footer-background-color: var(--dl-mist);
+  --ifm-footer-color: var(--dl-soft);
+  --ifm-footer-link-color: var(--dl-ink);
+  --ifm-footer-link-hover-color: var(--ifm-color-primary);
+  padding: 1.5rem 0 1.25rem;
+  border-top: 1px solid var(--dl-line);
+  font-size: 0.88rem;
+}
+.footer__links { margin-bottom: 0.6rem; display: flex; justify-content: center; }
+.footer__title { display: none; }
+.footer__col { margin-bottom: 0; }
+.footer .col { --ifm-spacing-horizontal: 0; }
+.footer__items { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.5rem; }
+.footer__item { padding: 0; }
+.footer__bottom { font-size: 0.82rem; color: var(--dl-soft); }
+.footer__bottom a { color: var(--ifm-color-primary); }
+
+/* Keyboard focus */
+a:focus-visible, button:focus-visible, .navbar__link:focus-visible, .footer__link-item:focus-visible {
+  outline: 3px solid var(--dl-accent); outline-offset: 2px; border-radius: 6px;
+}
+
+@media (max-width: 996px) {
+  .dl-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .dl-tiles, .dl-checks { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .dl-section { padding: 3.5rem 0; }
+  .dl-hero__title { font-size: clamp(2rem, 10vw, 2.5rem); }
+  .dl-hero__art { padding-top: 76px; }
+  /* The install commands fit on one line down to 320px. */
+  .dl-hero__term { padding: 0.8rem 0.6rem 0.8rem; }
+  .dl-hero__term pre { font-size: 0.7rem; padding: 0.75rem 0.5rem; }
+  .dl-hero__kash { width: 128px; right: 20px; }
+  .dl-hero__paws { width: 112px; top: 63px; right: 28px; }
+  .dl-steps > li { padding-left: 0; padding-top: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dl-btn:hover { transform: none; }
+}
+
+/* Links inside running text are underlined, so they don't rely on colour alone. */
+.dl-statement a, .dl-steps p a, .dl-more a, .dl-tile p a, .dl-small a {
+  text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 1px;
+}
+
+:root { --ma-line: var(--dl-line); --ma-soft: var(--dl-soft); --ma-hover: var(--dl-mist); }
+/* More from OneKash Labs: the other apps, above the footer on every page. */
+.more-apps { padding: 2.5rem 0 2.25rem; border-top: 1px solid var(--ma-line); background: var(--ifm-background-color); }
+.more-apps__title { font-size: 1.15rem; margin: 0 0 1.25rem; }
+.more-apps__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem 1.5rem; }
+.more-apps__item { display: flex; align-items: center; gap: 0.85rem; padding: 0.5rem; margin: -0.5rem; border-radius: 14px; color: var(--ifm-font-color-base); }
+.more-apps__item:hover { text-decoration: none; color: var(--ifm-font-color-base); background: var(--ma-hover); }
+.more-apps__item img { flex: none; width: 48px; height: 48px; border-radius: 12px; }
+.more-apps__item strong { display: block; font-size: 1rem; line-height: 1.25; }
+.more-apps__item strong + span { display: block; font-size: 0.9rem; line-height: 1.35; color: var(--ma-soft); }
+@media (max-width: 996px) { .more-apps__list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .more-apps__list { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 340px) {
+  .dl-hero__term pre { font-size: 0.62rem; padding: 0.7rem 0.4rem; }
+}
+
+/* Command names in step headings read as code, in the heading's size. */
+.dl-steps h3 code { font-size: 1.05rem; padding: 0.1rem 0.45rem; }
+.dl-steps + .dl-tiles { margin-top: 1rem; }
+.dl-code { max-width: 48rem; }
