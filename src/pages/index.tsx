@@ -34,11 +34,11 @@ type Tile = {title: string; body: string};
 type Row = {problem: string; prompt: string; devloop: string};
 
 const WHY: Row[] = [
-  {problem: 'Deciding what to build', prompt: 'What to build, how, and the code are decided in one pass, so a misread requirement goes straight into the code.', devloop: '/spec and /plan settle what and how first, and you approve the reviewed plan before any code.'},
-  {problem: 'Checking the work', prompt: 'The agent that wrote the code also checks it.', devloop: 'The plan and the code are reviewed in a context that did not write them.'},
-  {problem: 'Keeping the plan', prompt: 'The plan exists only in the session, so a long or restarted session loses it.', devloop: 'The plan lives in a JSON tracker that survives a reset.'},
-  {problem: 'Proving it works', prompt: 'An agent can report done without a test that proves it.', devloop: 'Chunks with logic start from a failing test, and the code review checks each acceptance criterion against a test.'},
-  {problem: 'Keeping the rules', prompt: 'You repeat your project rules in each prompt.', devloop: 'Your project rules live in .devloop/config.md and are read on every run.'},
+  {problem: 'Deciding what to build', prompt: 'Requirements and design get settled while the code is being written.', devloop: '/spec and /plan settle them first, and you approve the reviewed plan before any code.'},
+  {problem: 'Checking the work', prompt: 'The session that wrote the code also reviews it.', devloop: 'The plan and the code are reviewed in a context that didn’t write them.'},
+  {problem: 'Keeping the plan', prompt: 'The plan lives in the conversation, and compaction or a new session loses detail.', devloop: 'The plan lives in a tracker file that survives a reset.'},
+  {problem: 'Proving it works', prompt: '“Done” can arrive without a test for each requirement.', devloop: 'Chunks with logic start from a failing test, and the review checks each criterion against a test.'},
+  {problem: 'Repeating the process', prompt: 'You ask for tests first, a review and a pause before commit, again each session.', devloop: 'The process is built in, and an Autonomy section sets how much runs without asking.'},
 ];
 
 const LENSES: Tile[] = [
@@ -188,13 +188,13 @@ function Why(): ReactNode {
     <section className="dl-section dl-section--mist">
       <div className="container">
         <Heading as="h2" className="dl-heading">
-          One prompt or devloop
+          Compared with prompting as you go
         </Heading>
         <table className="dl-compare">
           <thead>
             <tr>
               <th scope="col" />
-              <th scope="col">With one prompt</th>
+              <th scope="col">Prompting as you go</th>
               <th scope="col">With devloop</th>
             </tr>
           </thead>
