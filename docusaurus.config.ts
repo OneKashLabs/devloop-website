@@ -3,7 +3,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import {themes} from 'prism-react-renderer';
 
 const DESCRIPTION =
-  'A test-driven development loop for Claude Code and Codex, with review agents that check the plan before coding and the diff before commit.';
+  'A test-driven development plugin for Claude Code and Codex, with review agents that check the plan before coding and the diff before commit.';
 const REPO = 'https://github.com/OneKashLabs/devloop';
 // The one organization every OneKash Labs site points to, defined on onekash.org.
 const ORG = {'@type': 'Organization', '@id': 'https://onekash.org/#org', name: 'OneKash Labs', url: 'https://onekash.org'};
@@ -37,6 +37,8 @@ const config: Config = {
         url: 'https://devloop.onekash.org',
         description: DESCRIPTION,
         applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'macOS, Linux, Windows',
+        softwareVersion: '4.0.0',
         downloadUrl: REPO,
         softwareHelp: `${REPO}/issues`,
         license: 'https://www.apache.org/licenses/LICENSE-2.0',

@@ -80,7 +80,7 @@ function Hero(): ReactNode {
             Spec, plan and build, with independent review.
           </Heading>
           <p className="dl-hero__lead">
-            A test-driven development loop for Claude Code and Codex. Review agents check the plan before coding
+            A test-driven development plugin for Claude Code and Codex. Review agents check the plan before coding
             and the diff before commit.
           </p>
           <div className="dl-hero__cta">
@@ -306,8 +306,8 @@ function Autonomy(): ReactNode {
 export default function Home(): ReactNode {
   return (
     <Layout
-      title="Spec, plan and build, with independent review"
-      description="A test-driven development loop for Claude Code and Codex, with review agents that check the plan before coding and the diff before commit.">
+      title="A test-driven plugin for Claude Code and Codex"
+      description="A test-driven development plugin for Claude Code and Codex, with review agents that check the plan before coding and the diff before commit.">
       <Hero />
       <main>
         <Statement />
