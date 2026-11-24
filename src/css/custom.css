@@ -44,14 +44,16 @@
   --ifm-color-primary-lighter: #c4c3ff;
   --ifm-color-primary-lightest: #dddcff;
 
-  --dl-mist: #121833;
-  --dl-paper: #0a0e1c;
+  /* The hero and the loop are the darkest; the page sits one step lighter, so each band reads. */
+  --dl-slate: #080b16;
+  --dl-mist: #181d38;
+  --dl-paper: #11152a;
   --dl-ink: #eceefa;
-  --dl-soft: #b1b5cc;
-  --dl-line: rgba(255, 255, 255, 0.1);
+  --dl-soft: #b6bad3;
+  --dl-line: rgba(255, 255, 255, 0.09);
 
-  --ifm-background-surface-color: #121833;
-  --ifm-navbar-background-color: rgba(10, 14, 28, 0.85);
+  --ifm-background-surface-color: #181d38;
+  --ifm-navbar-background-color: rgba(17, 21, 42, 0.85);
 }
 
 html { scroll-behavior: smooth; }
@@ -280,3 +282,9 @@ a:focus-visible, button:focus-visible, .navbar__link:focus-visible, .footer__lin
 .dl-steps h3 code { font-size: 1.05rem; padding: 0.1rem 0.45rem; }
 .dl-steps + .dl-tiles { margin-top: 1rem; }
 .dl-code { max-width: 48rem; }
+
+/* Dark mode: a checkpoint is the accent, not white, so it stands out without glare. */
+[data-theme='dark'] .dl-node--you { background: var(--dl-accent); border-color: var(--dl-accent); }
+[data-theme='dark'] .dl-node--you h3 { color: var(--dl-on-accent); }
+[data-theme='dark'] .dl-node--you .dl-node__kind, [data-theme='dark'] .dl-node--you p { color: rgba(10, 14, 28, 0.78); }
+[data-theme='dark'] .dl-node--agent { background: rgba(143, 140, 255, 0.14); }
