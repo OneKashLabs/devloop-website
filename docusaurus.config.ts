@@ -10,6 +10,7 @@ const ORG = {'@type': 'Organization', '@id': 'https://onekash.org/#org', name: '
 
 // Code blocks on the hero's ink, so commands read as part of the logo's palette.
 const codeTheme = {...themes.palenight, plain: {...themes.palenight.plain, backgroundColor: '#0d1124'}};
+const darkCodeTheme = {...codeTheme, plain: {...codeTheme.plain, backgroundColor: '#0f1113'}};
 
 const config: Config = {
   title: 'devloop',
@@ -83,7 +84,7 @@ const config: Config = {
       {name: 'twitter:image:alt', content: 'devloop: spec, plan and build, with independent review. The install command and the devloop mark.'},
     ],
     colorMode: {respectPrefersColorScheme: true},
-    prism: {theme: codeTheme, darkTheme: codeTheme, additionalLanguages: ['bash', 'json', 'markdown']},
+    prism: {theme: codeTheme, darkTheme: darkCodeTheme, additionalLanguages: ['bash', 'json', 'markdown']},
     navbar: {
       title: 'devloop',
       logo: {alt: 'devloop logo', src: 'img/icon-rounded.png'},

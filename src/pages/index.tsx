@@ -34,22 +34,22 @@ type Tile = {title: string; body: string};
 type Row = {problem: string; prompt: string; devloop: string};
 
 const WHY: Row[] = [
-  {problem: 'Deciding what to build', prompt: 'What to build, how, and the code come out in one pass, so a misread requirement is already code.', devloop: '/spec and /plan settle what and how first, and you approve the reviewed plan before any code.'},
-  {problem: 'Checking the work', prompt: 'The context that wrote the code says it works. That is a self-report.', devloop: 'The plan and the code are reviewed in a context that did not write them.'},
-  {problem: 'Keeping the plan', prompt: 'A long session degrades and a resumed one starts cold, so the plan is lost.', devloop: 'The plan lives in a JSON tracker that survives a reset.'},
+  {problem: 'Deciding what to build', prompt: 'What to build, how, and the code are decided in one pass, so a misread requirement goes straight into the code.', devloop: '/spec and /plan settle what and how first, and you approve the reviewed plan before any code.'},
+  {problem: 'Checking the work', prompt: 'The agent that wrote the code also checks it.', devloop: 'The plan and the code are reviewed in a context that did not write them.'},
+  {problem: 'Keeping the plan', prompt: 'The plan exists only in the session, so a long or restarted session loses it.', devloop: 'The plan lives in a JSON tracker that survives a reset.'},
   {problem: 'Proving it works', prompt: 'An agent can report done without a test that proves it.', devloop: 'Chunks with logic start from a failing test, and the code review checks each acceptance criterion against a test.'},
-  {problem: 'Keeping the rules', prompt: 'The rules live in your head and drift from run to run.', devloop: 'Your project rules live in .devloop/config.md and are read on every run.'},
+  {problem: 'Keeping the rules', prompt: 'You repeat your project rules in each prompt.', devloop: 'Your project rules live in .devloop/config.md and are read on every run.'},
 ];
 
 const LENSES: Tile[] = [
   {title: 'Conformance', body: 'The change does what the plan says. Each acceptance criterion is confirmed by a quoted test, plausible (code, no test), or refuted.'},
   {
     title: 'Correctness, 5 angles',
-    body: 'Line-by-line diff scan, removed-behavior auditor, cross-file caller and callee tracer, language-pitfall specialist, wrapper and proxy correctness.',
+    body: 'Reads every changed line, checks what removed code used to guarantee, follows callers and callees, and looks for language pitfalls and wrapper mistakes.',
   },
   {
     title: 'Cleanup, 5 angles',
-    body: 'Reuse, simplification, efficiency, altitude, and maintainability: stale docs, hard-coded environment values, dependency and versioning rules, error messages.',
+    body: 'Reuse, simpler code, wasted work, whether a fix is at the right depth, and maintainability: stale docs, hard-coded environment values, dependency rules, error messages.',
   },
   {
     title: 'Conventions, in every lens',
@@ -132,20 +132,6 @@ function Hero(): ReactNode {
   );
 }
 
-function Statement(): ReactNode {
-  return (
-    <section className="dl-statement">
-      <div className="container">
-        <Heading as="h2">Reviewed by agents that didn’t write the code.</Heading>
-        <p>
-          The plan review and the code review run in a context that did not write the plan or the code. You approve
-          the result at two checkpoints.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 function NodeCard({n}: {n: Node}): ReactNode {
   return (
     <li className={`dl-node dl-node--${n.kind}`}>
@@ -202,11 +188,8 @@ function Why(): ReactNode {
     <section className="dl-section dl-section--mist">
       <div className="container">
         <Heading as="h2" className="dl-heading">
-          Why not a single prompt?
+          One prompt or devloop
         </Heading>
-        <p className="dl-lead">
-          A coding agent can build a feature from one prompt. One prompt doesn’t give you the steps around the code.
-        </p>
         <table className="dl-compare">
           <thead>
             <tr>
@@ -238,8 +221,8 @@ function Review(): ReactNode {
           The code review: three lenses
         </Heading>
         <p className="dl-lead">
-          <code>review-impl</code> reads the diff in a fresh context, read-only. Both reviews use one list of six
-          concerns: does the change do what was asked, does it hold up, and can it be maintained.
+          <code>review-impl</code> reads the diff in a fresh context and changes nothing. Both reviews check the same
+          six concerns.
         </p>
         <div className="dl-tiles">
           {LENSES.map((t) => (
@@ -250,11 +233,9 @@ function Review(): ReactNode {
           ))}
         </div>
         <p className="dl-more">
-          The correctness lens lists every candidate defect, then a verify pass keeps the confirmed and plausible ones.
-          Each finding says whether the change introduced it; a pre-existing bug is reported but doesn’t fail the gate.
-          A small diff gets one reviewer with every lens, a larger one an agent per lens, and each report ends with one
-          JSON list of findings. To review a diff with no plan, such as a hotfix, give review-impl the diff range and
-          say there is no tracker.
+          Each finding is checked against the code before it is reported, and says whether this change introduced it.
+          A bug that was already there is reported but doesn’t fail the review. To review a diff with no plan, give
+          review-impl the diff range.
         </p>
       </div>
     </section>
@@ -352,7 +333,6 @@ export default function Home(): ReactNode {
       description="A test-driven development plugin for Claude Code and Codex, with review agents that check the plan before coding and the diff before commit.">
       <Hero />
       <main>
-        <Statement />
         <Loop />
         <Why />
         <Review />

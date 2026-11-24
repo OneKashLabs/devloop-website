@@ -44,16 +44,16 @@
   --ifm-color-primary-lighter: #c4c3ff;
   --ifm-color-primary-lightest: #dddcff;
 
-  /* The hero and the loop are the darkest; the page sits one step lighter, so each band reads. */
-  --dl-slate: #080b16;
-  --dl-mist: #181d38;
-  --dl-paper: #11152a;
-  --dl-ink: #eceefa;
-  --dl-soft: #b6bad3;
-  --dl-line: rgba(255, 255, 255, 0.09);
+  /* Neutral greys, darkest for the hero and the loop, so the violet and teal stay the only colour. */
+  --dl-slate: #0f1113;
+  --dl-mist: #1d2024;
+  --dl-paper: #16181b;
+  --dl-ink: #ececee;
+  --dl-soft: #b4b7bd;
+  --dl-line: rgba(255, 255, 255, 0.08);
 
-  --ifm-background-surface-color: #181d38;
-  --ifm-navbar-background-color: rgba(17, 21, 42, 0.85);
+  --ifm-background-surface-color: #1d2024;
+  --ifm-navbar-background-color: rgba(22, 24, 27, 0.85);
 }
 
 html { scroll-behavior: smooth; }
@@ -288,3 +288,12 @@ a:focus-visible, button:focus-visible, .navbar__link:focus-visible, .footer__lin
 [data-theme='dark'] .dl-node--you h3 { color: var(--dl-on-accent); }
 [data-theme='dark'] .dl-node--you .dl-node__kind, [data-theme='dark'] .dl-node--you p { color: rgba(10, 14, 28, 0.78); }
 [data-theme='dark'] .dl-node--agent { background: rgba(143, 140, 255, 0.14); }
+
+[data-theme='dark'] .dl-hero__term { background: #0a0b0d; border-color: #2a2d33; }
+[data-theme='dark'] .dl-term__bar i { background: #2a2d33; }
+[data-theme='dark'] .dl-term__or { border-top-color: #24272c; }
+[data-theme='dark'] .dl-node:not(.dl-node--you) { border-color: rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.03); }
+[data-theme='dark'] .dl-node.dl-node--agent { border-color: var(--dl-accent); background: rgba(143, 140, 255, 0.1); }
+[data-theme='dark'] .dl-back span { background: var(--dl-slate); }
+/* The hero and the loop share the ink, so a hairline marks where the hero ends. */
+main > .dl-section--ink:first-child { border-top: 1px solid rgba(255, 255, 255, 0.1); }
