@@ -10,27 +10,35 @@ import TabItem from '@theme/TabItem';
 const REPO = 'https://github.com/OneKashLabs/devloop';
 const EXAMPLES = `${REPO}/tree/main/examples`;
 
-// Commands and agents show as code; the checkpoints are plain headings.
-type Step = {name: string; does: string; code?: boolean};
+// Who acts at each step: a command you run, an agent that reviews in a fresh context, or you.
+type Kind = 'run' | 'agent' | 'you';
+type Node = {name: string; kind: Kind; does: string};
 
-const LOOP: Step[] = [
-  {name: '/spec', code: true, does: 'Clarify what to build: user stories and acceptance criteria. Or check an existing design doc.'},
-  {name: '/plan', code: true, does: 'Plan how to build it: chunks, dependencies and a JSON tracker. A bug fix starts with a proof: a failing test or a probe.'},
-  {name: 'review-plan', code: true, does: 'An independent agent reviews the plan. Review, fix and re-review run unattended, up to 3 rounds by default.'},
-  {name: 'Checkpoint 1', does: 'You approve the reviewed plan and every decision it made.'},
-  {name: '/implement', code: true, does: 'Build it with TDD, chunk by chunk: a failing test, the code, a passing test.'},
-  {name: 'review-impl', code: true, does: 'An independent agent reviews the diff through conformance, correctness and cleanup lenses.'},
-  {name: 'Checkpoint 2', does: 'You approve the findings and fixes. Then the finish steps run.'},
+const PLAN_ROW: Node[] = [
+  {name: '/spec', kind: 'run', does: 'What to build: user stories and acceptance criteria.'},
+  {name: '/plan', kind: 'run', does: 'How: chunks, dependencies and a JSON tracker. A bug fix starts with a proof.'},
+  {name: 'review-plan', kind: 'agent', does: 'Reviews the plan, up to 3 rounds by default.'},
+  {name: 'You approve', kind: 'you', does: 'The reviewed plan and every decision it made.'},
 ];
+
+const BUILD_ROW: Node[] = [
+  {name: '/implement', kind: 'run', does: 'Builds each chunk test first: a failing test, the code, a passing test.'},
+  {name: 'review-impl', kind: 'agent', does: 'Reviews the diff: conformance, correctness and cleanup.'},
+  {name: 'You approve', kind: 'you', does: 'The findings and fixes. Then the finish steps run.'},
+];
+
+const KIND_LABEL: Record<Kind, string> = {run: 'You run', agent: 'Independent agent', you: 'Checkpoint'};
 
 type Tile = {title: string; body: string};
 
-const WHY: Tile[] = [
-  {title: 'One pass decides everything', body: 'What to build, how, and the code come out at once. A misread requirement is written as code, where it costs the most to undo.'},
-  {title: 'The author grades its own work', body: '“I verified it works,” from the context that wrote the code, is a self-report.'},
-  {title: 'Long sessions lose the plan', body: 'A long session degrades and a resumed one starts cold, so the plan and the reasoning behind it are lost.'},
-  {title: 'No hard gate', body: 'An agent can report “done” without a test that proves it.'},
-  {title: 'Prompts don’t persist', body: 'They live in your head and drift from run to run and project to project.'},
+type Row = {problem: string; prompt: string; devloop: string};
+
+const WHY: Row[] = [
+  {problem: 'Deciding what to build', prompt: 'What to build, how, and the code come out in one pass, so a misread requirement is already code.', devloop: '/spec and /plan settle what and how first, and you approve the reviewed plan before any code.'},
+  {problem: 'Checking the work', prompt: 'The context that wrote the code says it works. That is a self-report.', devloop: 'The plan and the code are reviewed in a context that did not write them.'},
+  {problem: 'Keeping the plan', prompt: 'A long session degrades and a resumed one starts cold, so the plan is lost.', devloop: 'The plan lives in a JSON tracker that survives a reset.'},
+  {problem: 'Proving it works', prompt: 'An agent can report done without a test that proves it.', devloop: 'Chunks with logic start from a failing test, and the code review checks each acceptance criterion against a test.'},
+  {problem: 'Keeping the rules', prompt: 'The rules live in your head and drift from run to run.', devloop: 'Your project rules live in .devloop/config.md and are read on every run.'},
 ];
 
 const LENSES: Tile[] = [
@@ -47,13 +55,6 @@ const LENSES: Tile[] = [
     title: 'Conventions, in every lens',
     body: 'Reads your CLAUDE.md or AGENTS.md and .devloop/config.md, and flags only rules it can quote. A violation with a real fault fails the gate like a bug.',
   },
-];
-
-const CHECKS: string[] = [
-  'The correctness lens lists every candidate defect, then a verify pass keeps the CONFIRMED and PLAUSIBLE ones.',
-  'Each finding says whether the change introduced it. A pre-existing bug is reported and never fails the gate on its own.',
-  'Each report ends with one JSON list of findings.',
-  'A small diff gets one reviewer with every lens; a larger one gets one agent per lens.',
 ];
 
 const DEVLOOP_DIR = `.devloop/
@@ -102,9 +103,28 @@ function Hero(): ReactNode {
               <i />
               <i />
             </div>
-            <CodeBlock language="text">/plugin marketplace add OneKashLabs/devloop</CodeBlock>
-            <CodeBlock language="text">/plugin install devloop@onekashlabs</CodeBlock>
-            <p className="dl-term__or">In Claude Code. Codex steps are below.</p>
+            <pre className="dl-run" aria-label="An example devloop run">
+              <span className="dl-run__cmd">/implement refund-cap</span>
+              {'\n'}
+              <span className="dl-run__dim">chunk 1  test fails, code, test passes</span>
+              {'\n'}
+              <span className="dl-run__dim">chunk 2  test fails, code, test passes</span>
+              {'\n\n'}
+              <span className="dl-run__agent">review-impl</span> <span className="dl-run__fail">FAIL</span>, 1 finding
+              {'\n'}
+              {'  correctness, confirmed, refunds.py:12'}
+              {'\n'}
+              <span className="dl-run__dim">{'  a second refund can exceed the order total'}</span>
+              {'\n\n'}
+              <span className="dl-run__dim">fixed, test added, re-reviewed</span>
+              {'\n'}
+              <span className="dl-run__agent">review-impl</span> <span className="dl-run__pass">PASS</span>
+              {'\n\n'}
+              <span className="dl-run__you">Checkpoint 2: approve the findings and fixes?</span>
+            </pre>
+            <p className="dl-term__or">
+              An example run. <Link to="/#install">Install steps</Link> are below.
+            </p>
           </div>
         </div>
       </div>
@@ -126,38 +146,52 @@ function Statement(): ReactNode {
   );
 }
 
+function NodeCard({n}: {n: Node}): ReactNode {
+  return (
+    <li className={`dl-node dl-node--${n.kind}`}>
+      <span className="dl-node__kind">{KIND_LABEL[n.kind]}</span>
+      <Heading as="h3">{n.kind === 'you' ? n.name : <code>{n.name}</code>}</Heading>
+      <p>{n.does}</p>
+    </li>
+  );
+}
+
 function Loop(): ReactNode {
   return (
-    <section className="dl-section">
+    <section className="dl-section dl-section--ink">
       <div className="container">
         <Heading as="h2" className="dl-heading" id="loop">
           How the loop works
         </Heading>
-        <ol className="dl-steps">
-          {LOOP.map((s) => (
-            <li key={s.name}>
-              <Heading as="h3">{s.code ? <code>{s.name}</code> : s.name}</Heading>
-              <p>{s.does}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="dl-tiles">
-          <div className="dl-tile">
-            <Heading as="h3">Small fixes take the fast lane</Heading>
-            <p>
-              One production file plus its tests, with no new behavior beyond the fix, skips the tracker: the failing
-              test, the fix, then the code review. <code>/plan</code> checks the size and takes it itself.
-            </p>
+        <div className="dl-loop">
+          <ol className="dl-track">
+            {PLAN_ROW.map((n, i) => (
+              <NodeCard n={n} key={`p${i}`} />
+            ))}
+          </ol>
+          <div className="dl-back" aria-hidden="true">
+            <svg viewBox="0 0 400 56" preserveAspectRatio="none">
+              <defs>
+                <marker id="dl-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0 L10 5 L0 10 z" />
+                </marker>
+              </defs>
+              <path d="M150 56 V28 H250 V3" markerEnd="url(#dl-arrow)" />
+            </svg>
+            <span>a finding shows the plan was wrong</span>
           </div>
-          <div className="dl-tile">
-            <Heading as="h3">A wrong plan gets corrected</Heading>
-            <p>
-              If a code-review finding shows the plan was wrong, <code>/implement</code> adds corrective chunks, has
-              them reviewed and builds them, without asking by default. A finding that the spec was wrong always comes
-              to you.
-            </p>
-          </div>
+          <ol className="dl-track dl-track--build">
+            {BUILD_ROW.map((n, i) => (
+              <NodeCard n={n} key={`b${i}`} />
+            ))}
+          </ol>
         </div>
+        <p className="dl-more">
+          When a code-review finding shows the plan was wrong, /implement adds corrective chunks, has them reviewed
+          and builds them, without asking by default. A finding that the spec was wrong always comes to you. Small
+          fixes take the fast lane: one production file plus its tests, with no new behavior beyond the fix, skips the
+          tracker and goes straight to the code review.
+        </p>
       </div>
     </section>
   );
@@ -173,14 +207,24 @@ function Why(): ReactNode {
         <p className="dl-lead">
           A coding agent can build a feature from one prompt. One prompt doesn’t give you the steps around the code.
         </p>
-        <div className="dl-tiles">
-          {WHY.map((t) => (
-            <div className="dl-tile" key={t.title}>
-              <Heading as="h3">{t.title}</Heading>
-              <p>{t.body}</p>
-            </div>
-          ))}
-        </div>
+        <table className="dl-compare">
+          <thead>
+            <tr>
+              <th scope="col" />
+              <th scope="col">With one prompt</th>
+              <th scope="col">With devloop</th>
+            </tr>
+          </thead>
+          <tbody>
+            {WHY.map((w) => (
+              <tr key={w.problem}>
+                <th scope="row">{w.problem}</th>
+                <td>{w.prompt}</td>
+                <td>{w.devloop}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   );
@@ -205,14 +249,12 @@ function Review(): ReactNode {
             </div>
           ))}
         </div>
-        <ul className="dl-checks">
-          {CHECKS.map((c) => (
-            <li key={c}>{c}</li>
-          ))}
-        </ul>
         <p className="dl-more">
-          To review a diff with no plan, such as a hotfix or someone else’s branch, give <code>review-impl</code> the
-          diff range and say there is no tracker.
+          The correctness lens lists every candidate defect, then a verify pass keeps the confirmed and plausible ones.
+          Each finding says whether the change introduced it; a pre-existing bug is reported but doesn’t fail the gate.
+          A small diff gets one reviewer with every lens, a larger one an agent per lens, and each report ends with one
+          JSON list of findings. To review a diff with no plan, such as a hotfix, give review-impl the diff range and
+          say there is no tracker.
         </p>
       </div>
     </section>

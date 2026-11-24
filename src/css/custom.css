@@ -5,19 +5,20 @@
 /* devloop site theme, laid out like the other OneKash Labs sites. The colours come from the
    logo: its ink for the hero, its violet as the single accent. */
 :root {
-  --ifm-color-primary: #4f46e5;
-  --ifm-color-primary-dark: #3f35e1;
-  --ifm-color-primary-darker: #372dd9;
-  --ifm-color-primary-darkest: #2d24b4;
-  --ifm-color-primary-light: #635be8;
-  --ifm-color-primary-lighter: #6d66ea;
-  --ifm-color-primary-lightest: #8c86ee;
+  /* A deeper shade of the logo's violet, 6.6:1 on paper. */
+  --ifm-color-primary: #5148c4;
+  --ifm-color-primary-dark: #463dad;
+  --ifm-color-primary-darker: #3f37a0;
+  --ifm-color-primary-darkest: #342d84;
+  --ifm-color-primary-light: #6159cc;
+  --ifm-color-primary-lighter: #6b64d0;
+  --ifm-color-primary-lightest: #8a84da;
 
   --dl-slate: #0d1124;
   --dl-accent: #8f8cff;
   --dl-accent-hover: #a7a5ff;
   --dl-on-accent: #0a0e1c;
-  --dl-mist: #f1f2fa;
+  --dl-mist: #e9eaf6;
   --dl-paper: #fbfbfe;
   --dl-ink: #12172a;
   --dl-soft: #4d546f;
@@ -69,7 +70,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; }
 .dl-section--mist { background: var(--dl-mist); }
 .dl-heading { font-size: clamp(1.9rem, 4vw, 2.6rem); max-width: 42rem; margin: 0 0 2.25rem; scroll-margin-top: 5rem; }
 .dl-lead { font-size: 1.15rem; color: var(--dl-soft); max-width: 42rem; margin: -1rem 0 1.5rem; }
-.dl-more { margin: 1.5rem 0 0; color: var(--dl-soft); }
+.dl-more { margin: 1.5rem 0 0; color: var(--dl-soft); max-width: 48rem; }
 .dl-small { margin: -0.5rem 0 1rem; font-size: 0.92rem; color: var(--dl-soft); }
 
 /* Hero: the logo's ink, like a terminal. */
@@ -119,12 +120,17 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; }
 .dl-hero__term { position: relative; z-index: 1; border-radius: 16px; background: #070a16; border: 1px solid #2c3360; padding: 0.9rem 1rem 1rem; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.6); min-width: 0; }
 .dl-term__bar { display: flex; gap: 6px; margin: 0 0 0.8rem 0.2rem; }
 .dl-term__bar i { width: 11px; height: 11px; border-radius: 50%; background: #2c3360; }
-/* The commands sit in the window itself, as in a real terminal. */
-.dl-hero__term .theme-code-block { margin: 0; box-shadow: none; --prism-background-color: transparent !important; }
-.dl-hero__term .theme-code-block pre { background: transparent !important; padding-left: 0.4rem; }
-/* A prompt drawn by CSS, so the copy button copies only the command. */
-.dl-hero__term pre .token-line::before { content: '> '; color: var(--dl-accent); }
-.dl-term__or { margin: 0.4rem 0 0; text-align: center; font-size: 0.85rem; color: rgba(231, 233, 246, 0.7); }
+/* An example run: the review catches a bug, the fix is re-reviewed, you approve. */
+.dl-run { margin: 0; padding: 0.1rem 0.5rem 0.5rem; background: transparent; color: #d9dcf2; font-size: 0.86rem; line-height: 1.6; white-space: pre; overflow-x: auto; }
+.dl-run__cmd { color: #f6f7fd; }
+.dl-run__cmd::before { content: '> '; color: var(--dl-accent); }
+.dl-run__dim { color: rgba(217, 220, 242, 0.6); }
+.dl-run__agent { color: var(--dl-accent); }
+.dl-run__fail { color: #ff9b8a; font-weight: 700; }
+.dl-run__pass { color: #8fe3b8; font-weight: 700; }
+.dl-run__you { color: #f6f7fd; font-weight: 700; }
+.dl-term__or { margin: 0.6rem 0 0; padding: 0.7rem 0.5rem 0; border-top: 1px solid #1f2547; font-size: 0.85rem; color: rgba(231, 233, 246, 0.72); }
+.dl-term__or a { color: var(--dl-accent); text-decoration: underline; text-underline-offset: 0.18em; }
 
 /* In dark mode the page shares the hero's family, so a hairline marks where the hero ends. */
 [data-theme='dark'] .dl-hero { border-bottom: 1px solid var(--dl-line); }
@@ -155,11 +161,42 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.08; }
 .dl-steps h3 { font-size: 1.2rem; margin: 0 0 0.3rem; }
 .dl-steps p { margin: 0 0 1rem; }
 .dl-steps .tabs-container { margin-bottom: 1rem; }
+.dl-steps > li:last-child { padding-bottom: 0; }
+/* Code inside running text keeps its font, without the chip that breaks a sentence up. */
+.dl-more code, .dl-lead code, .dl-tile p code, .dl-steps p code { background: transparent; border: 0; padding: 0; font-size: 0.92em; }
 
-/* Check lists */
-.dl-checks { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 2.5rem; max-width: 52rem; }
-.dl-checks li { position: relative; padding-left: 1.8rem; }
-.dl-checks li::before { content: '✓'; position: absolute; left: 0; font-weight: 700; color: var(--ifm-color-primary); }
+/* The loop, on the hero's ink: who acts at each step, and the way back when the plan was wrong. */
+.dl-section--ink { background: var(--dl-slate); color: #e7e9f6; }
+.dl-section--ink .dl-heading { color: #f6f7fd; }
+.dl-section--ink .dl-more { color: rgba(231, 233, 246, 0.8); max-width: 48rem; }
+.dl-track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
+.dl-node { position: relative; padding: 0.9rem 1rem 1rem; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.03); }
+/* A short line joins each step to the next. */
+.dl-node + .dl-node::before { content: ''; position: absolute; top: 50%; left: -1.5rem; width: 1.5rem; height: 1px; background: rgba(255, 255, 255, 0.3); }
+.dl-node__kind { display: block; font-size: 0.8rem; color: rgba(231, 233, 246, 0.62); }
+.dl-node h3 { font-size: 1.05rem; margin: 0.3rem 0 0.35rem; color: #f6f7fd; }
+.dl-node h3 code { background: rgba(255, 255, 255, 0.08); border: 0; color: #f6f7fd; font-size: 0.98rem; padding: 0.05rem 0.4rem; }
+.dl-node p { margin: 0; font-size: 0.92rem; line-height: 1.45; color: rgba(231, 233, 246, 0.78); }
+.dl-node--agent { border-color: var(--dl-accent); background: rgba(143, 140, 255, 0.1); }
+.dl-node--agent .dl-node__kind { color: var(--dl-accent); }
+/* The checkpoints are where you act, so they are the one solid card. */
+.dl-node--you { background: #f6f7fd; border-color: #f6f7fd; }
+.dl-node--you .dl-node__kind, .dl-node--you p { color: #4d546f; }
+.dl-node--you h3 { color: var(--dl-slate); }
+.dl-back { position: relative; height: 56px; margin: 0.4rem 0; }
+.dl-back svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dl-back svg path { fill: none; stroke: var(--dl-accent); stroke-width: 1.5; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; }
+.dl-back marker path { fill: var(--dl-accent); stroke: none; }
+.dl-back span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 0 0.6rem; background: var(--dl-slate); color: var(--dl-accent); font-size: 0.88rem; white-space: nowrap; }
+
+/* One prompt against devloop, one row per problem. */
+.dl-compare { display: table; width: 100%; border-collapse: collapse; margin: 0; }
+.dl-compare tr, .dl-compare tr:nth-child(2n) { background: transparent; border: 0; }
+.dl-compare th, .dl-compare td { border: 0; border-top: 1px solid var(--dl-line); padding: 1rem 1.5rem 1rem 0; text-align: left; vertical-align: top; background: transparent; }
+.dl-compare thead, .dl-compare thead tr { background: transparent; }
+.dl-compare thead th { border-top: 0; padding-top: 0; font-family: var(--ifm-heading-font-family); font-size: 1.05rem; }
+.dl-compare tbody th { width: 20%; font-family: var(--ifm-heading-font-family); font-size: 1.05rem; }
+.dl-compare td:nth-child(2) { color: var(--dl-soft); }
 
 /* Footer: one centred row of links, as on the other app sites. */
 .footer {
@@ -187,7 +224,20 @@ a:focus-visible, button:focus-visible, .navbar__link:focus-visible, .footer__lin
 
 @media (max-width: 996px) {
   .dl-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  .dl-tiles, .dl-checks { grid-template-columns: minmax(0, 1fr); }
+  .dl-tiles { grid-template-columns: minmax(0, 1fr); }
+  /* One column: the steps join top to bottom, and the paragraph under them states the way back. */
+  .dl-track { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .dl-track + .dl-track { margin-top: 1rem; }
+  .dl-node + .dl-node::before { top: -1rem; left: 1.5rem; width: 1px; height: 1rem; }
+  .dl-back { display: none; }
+}
+@media (max-width: 700px) {
+  .dl-compare thead { display: none; }
+  .dl-compare tr { display: block; padding: 0.9rem 0; border-top: 1px solid var(--dl-line); }
+  .dl-compare th, .dl-compare td { display: block; width: auto; border: 0; padding: 0.15rem 0; }
+  .dl-compare tbody th { width: auto; }
+  .dl-compare td:nth-child(2)::before { content: 'With one prompt: '; font-weight: 600; color: var(--dl-ink); }
+  .dl-compare td:nth-child(3)::before { content: 'With devloop: '; font-weight: 600; }
 }
 @media (max-width: 600px) {
   .dl-section { padding: 3.5rem 0; }
